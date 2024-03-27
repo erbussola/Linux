@@ -120,3 +120,4 @@
     lrwxrwxrwx 1 root root 6 Mar 27 10:44 DATA_DB105ES_02 -> ../sdg
     lrwxrwxrwx 1 root root 6 Mar 27 10:44 DATA_DB105ES_03 -> ../sdh
     ```
+11. **Eseguire le stesse operazioni su tutti i nodi del cluster Oracle RAC partento dal punto 1**
