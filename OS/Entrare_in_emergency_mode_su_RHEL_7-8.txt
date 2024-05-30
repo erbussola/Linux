@@ -1,0 +1,16 @@
+#Entrare in emergency mode su RHEL 7/8
+#Avvia il server Linux
+#Quando viene visualizzato il bootloader, premere un tasto qualsiasi tranne Invio per interrompere il conto alla rovescia.
+#Ora premi il tasto "e" per modificare la voce corrente, dove possiamo modificare la voce predefinita del boot loader e accedere alla modalità di emergenza.
+#Con i tasti cursore puoi navigare fino alla riga che inizia con Linux. 
+#aggiungere alla fine della riga quanto segue
+systemd.unit=emergency.target
+
+#Successivamente premi il tasto Ctrl + x per avviare utilizzando la configurazione modificata.
+#Accedi alla modalità di emergenza inserendo la password di root.
+#Utilizzare il comando mount per rimontare il file system / in lettura/scrittura. Ciò ti consentirà di modificare il file system
+mount -o remount,rw /
+
+#Se all'interno della cartella /dev/vg_os (in questo caso il VG è stato chiamato vg_os) non ci sono tutti gli LV necessari eseguire  i segenti comandi
+vgchange -ay 		#attiva gli lv
+vgscan --mknodes 	#crea i device sotto /dev/vg_os

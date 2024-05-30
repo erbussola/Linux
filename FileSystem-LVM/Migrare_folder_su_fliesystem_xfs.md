@@ -81,14 +81,26 @@
     ```
 
 9. **Verifica della configurazione:**
-   - Verifica che il nuovo filesystem sia montato correttamente.
+   - Verifica che il nuovo filesystem venga montato correttamente.
 
     ```bash
     mount -a
     ```
 
+    - Verifica che sia visibile il mount
+
+    ```bash
+    df -hT /u01
+    ```
+
+    - Verifica che il contenuto del filesystem sia visibile
+
+    ```bash
+    ll -R /u01
+    ```
+
 10. **Pulizia:**
-    - Se tutto funziona correttamente, puoi rimuovere il vecchio `/u01` di backup.
+    - Se tutto funziona correttamente, puoi rimuovere il vecchio `/u01_old` di backup.
 
     ```bash
     rm -rf /u01_old
@@ -108,7 +120,10 @@
     umount /mnt/u01
     mount /dev/rhel/u01 /u01
     echo '/dev/rhel/u01 /u01 xfs defaults 0 2' >> /etc/fstab
+    systemctl daemon-reload
     mount -a
+    df -hT /u01
+    ll -R /u01
     rm -rf /u01_old
     ```
 
