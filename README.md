@@ -5,7 +5,7 @@ Di seguito troverete una lista della documentazione disponibile nel repository L
 
 - [Procedure per la configurazione della rete su server Red Hat](./Networking)
 - [Procedure per la configurazione dei Dischi e LUN gestiti da Oracle ASM](./Oracle-ASM)
-- [COMING SOON - Procedure per la configurazione dei filesystem LVM](./README.md)
+- [Procedure per la configurazione dei filesystem LVM](./FileSystem-LVM)
 
 Per ulteriori informazioni e supporto, non esitate a contattare il nostro team.
 
