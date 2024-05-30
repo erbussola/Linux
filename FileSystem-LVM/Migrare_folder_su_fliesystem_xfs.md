@@ -4,13 +4,13 @@
    - Crea un volume logico (LV) da utilizzare per `/u01`. Supponiamo che tu abbia già un volume group (VG) esistente, ad esempio `rhel`.
 
     ```bash
-    lvcreate -L 10G -n u01 rhel
+    lvcreate -L 400G -n u01 rhel
     ```
 
-   - Formatta il volume logico con un filesystem, ad esempio ext4.
+   - Formatta il volume logico con un filesystem, ad esempio xfs.
 
     ```bash
-    mkfs.ext4 /dev/rhel/u01
+    mkfs.xfs /dev/rhel/u01
     ```
 
 2. **Preparazione del mount point temporaneo:**
@@ -71,7 +71,7 @@
    - Aggiungi una voce in `/etc/fstab` per montare il volume logico su `/u01` automaticamente al boot.
 
     ```bash
-    echo '/dev/rhel/u01 /u01 ext4 defaults 0 2' >> /etc/fstab
+    echo '/dev/rhel/u01 /u01 xfs defaults 0 2' >> /etc/fstab
     ```
 
     - Eseguire un reload del systemd per confermare la nuova entry
@@ -91,6 +91,24 @@
     - Se tutto funziona correttamente, puoi rimuovere il vecchio `/u01` di backup.
 
     ```bash
+    rm -rf /u01_old
+    ```
+
+- Ecco i comandi da eseguire in sequenza:
+
+    ```bash
+    lvcreate -L 400G -n u01 rhel
+    mkfs.xfs /dev/rhel/u01
+    mkdir /mnt/u01
+    mount /dev/rhel/u01 /mnt/u01
+    rsync -avx /u01/ /mnt/u01/
+    diff -r /u01 /mnt/u01
+    mv /u01 /u01_old
+    mkdir /u01
+    umount /mnt/u01
+    mount /dev/rhel/u01 /u01
+    echo '/dev/rhel/u01 /u01 xfs defaults 0 2' >> /etc/fstab
+    mount -a
     rm -rf /u01_old
     ```
 
