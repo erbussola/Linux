@@ -37,7 +37,7 @@ Su questo server la partizione utilizzata è configarata su LVM e ha ancora spaz
    - Copia i dati dalla vecchia `/u01` alla nuova posizione usando `rsync` per mantenere le proprietà dei file.
 
     ```bash
-    rsync -avx /u01/ /mnt/u01/
+    rsync -axHAX /u01/ /mnt/u01/
     ```
 
 5. **Verifica della copia:**
