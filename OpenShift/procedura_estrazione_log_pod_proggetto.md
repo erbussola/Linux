@@ -1,4 +1,4 @@
-## Guida all'estrazione dei log OpenShift usando il server bastion
+## Procedura all'estrazione dei log OpenShift usando un server bastion
 
 ### Introduzione
 Questa guida ti aiuterà a estrarre i log da uno o più pod all'interno di un progetto specifico su un bastion OpenShift, per un determinato intervallo di date. I comandi forniti sono pensati per automatizzare il processo e rendere più efficiente la ricerca di informazioni nei log.
