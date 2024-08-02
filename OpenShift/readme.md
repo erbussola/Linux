@@ -1,5 +1,5 @@
 # Benvenuti nella sezione OpenShft! 
-Qui troverete la documentazione tecnica per la configurazione e gestione di OpenShift.
+Qui troverete la documentazione tecnica per la gestione di progetti su OpenShift.
 
 ## Documentazione
 
