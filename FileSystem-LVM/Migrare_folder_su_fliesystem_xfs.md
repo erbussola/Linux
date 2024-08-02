@@ -1,5 +1,11 @@
 # Migrare a caldo la cartella `/u01` in un filesystem separato con un volume LVM
 
+- I passaggi di seguito descritti, dovrebbero consentirti di spostare a caldo la cartella `/u01` su un nuovo filesystem con volume LVM senza riavviare il sistema.
+- I passaggi sono stati eseguiti su di un server RedHat Enterprise Linux 8.9 con una configurazione LVM. \
+Su questo server la partizione utilizzata è configarata su LVM e ha ancora spazio, per creare nuovi LV o estendere quelli esistenti.
+
+**E' sempre consigliato eseguire un backup dei dati importanti e testare queste operazioni su un ambiente di staging prima di eseguirle in produzione.**
+
 1. **Creazione del volume LVM:**
    - Crea un volume logico (LV) da utilizzare per `/u01`. Supponiamo che tu abbia già un volume group (VG) esistente, ad esempio `rhel`.
 
@@ -31,7 +37,7 @@
    - Copia i dati dalla vecchia `/u01` alla nuova posizione usando `rsync` per mantenere le proprietà dei file.
 
     ```bash
-    rsync -avx /u01/ /mnt/u01/
+    rsync -axHAX /u01/ /mnt/u01/
     ```
 
 5. **Verifica della copia:**
@@ -127,4 +133,3 @@
     rm -rf /u01_old
     ```
 
-- Questi passaggi dovrebbero consentirti di spostare a caldo la cartella `/u01` su un nuovo filesystem con volume LVM senza riavviare il sistema. Tuttavia, è sempre consigliabile eseguire un backup dei dati importanti e testare queste operazioni su un ambiente di staging prima di eseguirle in produzione.
