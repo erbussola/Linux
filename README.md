@@ -3,7 +3,7 @@ Creato e gestito da Fabrizio Biscossi (ErBussola)
 
 Di seguito troverete una lista della documentazione disponibile nel repository Linux, con i link alle rispettive cartelle:
 
-- [Procedure per la configurazione della rete su server Red Hat](./Networking)
+- [Procedure per la configurazione della rete su server Red Hat](/erbussola/Linux/wiki/Networking) 
 - [Procedure per la configurazione dei Dischi e LUN gestiti da Oracle ASM](./Oracle-ASM)
 - [Procedure per la configurazione dei filesystem LVM](./FileSystem-LVM)
 
