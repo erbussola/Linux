@@ -25,9 +25,9 @@ Questa guida ti aiuterà a estrarre i log da uno o più pod all'interno di un pr
 
 3. **Selezione del progetto:**
    ```bash
-   oc project nas-ese
+   oc project my-project
    ```
-   Seleziona il progetto di cui vuoi estrarre i log. Sostituisci `nas-ese` con il nome del tuo progetto.
+   Seleziona il progetto di cui vuoi estrarre i log. Sostituisci `my-project` con il nome del tuo progetto.
 
 4. **Ricerca dei log per data:**
    ```bash
@@ -55,12 +55,12 @@ Questa guida ti aiuterà a estrarre i log da uno o più pod all'interno di un pr
 
 * **Log di un pod specifico:**
    ```bash
-   oc logs nas-dom-comparison-ese-76f884c59-mqzxq -n nas-ese
+   oc logs my-pod1-76f884c59-mqzxq -n my-project
    ```
    Sostituisci il nome del pod e del progetto con quelli desiderati.
    Per salvare i log in un file per un giorno specifico:
    ```bash
-   oc logs nas-dom-comparison-ese-76f884c59-mqzxq -n nas-ese | sed -n '/2024-08-01/,/2024-08-02/p' >> /tmp/SCTASK0082585_comparison_nas-ese_$(date '+%Y%m%d_%H%M%S').log
+   oc logs my-pod1-76f884c59-mqzxq -n my-project | sed -n '/2024-08-01/,/2024-08-02/p' >> /tmp/SCTASK0082585_my-pod1_my-project_$(date '+%Y%m%d_%H%M%S').log
    ```
 
 ### Note
