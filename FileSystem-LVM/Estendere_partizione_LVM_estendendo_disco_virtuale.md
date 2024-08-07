@@ -43,84 +43,111 @@ Lavorando con una VM ci viene in aiuto lo snapshot.
 5. per verificare che lo spazio aggiunto sia visibile al sisteama usare  `fdisk`
 
 	```bash
-	root@rmftpp04:~# fdisk -lu /dev/sdb
+	fdisk -lu /dev/sdb
+	```
+6. Aggiungere lo spazio aggiuntivo alla partizione LVM
+	```bash
+	fdisk -u /dev/sdb
+
+	Welcome to fdisk (util-linux 2.34).
+	Changes will remain in memory only, until you decide to write them.
+	Be careful before using the write command.
+
+	Command (m for help): p
+	Disk /dev/sdb: 400 GiB, 429496729600 bytes, 838860800 sectors
+	Disk model: Virtual disk
+	Units: sectors of 1 * 512 = 512 bytes
+	Sector size (logical/physical): 512 bytes / 512 bytes
+	I/O size (minimum/optimal): 512 bytes / 512 bytes
+	Disklabel type: dos
+	Disk identifier: 0xfe055a8e
+
+	Device     Boot Start       End   Sectors  Size Id Type
+	/dev/sdb1        2048 629145599 629143552  300G 8e Linux LVM
+
+	Command (m for help): d
+
+	Selected partition 1
+	Partition 1 has been deleted.
+
+	Command (m for help): n
+	Partition type
+	p   primary (0 primary, 0 extended, 4 free)
+	e   extended (container for logical partitions)
+	Select (default p): p
+	Partition number (1-4, default 1):
+	First sector (2048-838860799, default 2048):
+	Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-838860799, default 838860799):
+
+	Created a new partition 1 of type 'Linux' and of size 400 GiB.
+	Partition #1 contains a LVM2_member signature.
+
+	Do you want to remove the signature? [Y]es/[N]o: n
+
+	Command (m for help): t
+
+	Selected partition 1
+	Hex code (type L to list all codes): 8e
+	Changed type of partition 'Linux' to 'Linux LVM'.
+
+	Command (m for help): w
+	The partition table has been altered.
+	Syncing disks.
 	```
 
-#Aggiungere lo spazio aggiuntivo alla partizione LVM 
-root@rmftpp04:~# fdisk -u /dev/sdb
+7. Verifcare che lo spazio aggiuntivo sia visibile sulla partizione LVM
 
-Welcome to fdisk (util-linux 2.34).
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
+	```bash
+	fdisk -lu /dev/sdb
+	```
 
-Command (m for help): p
-Disk /dev/sdb: 400 GiB, 429496729600 bytes, 838860800 sectors
-Disk model: Virtual disk
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disklabel type: dos
-Disk identifier: 0xfe055a8e
+8. Verificare l'attuale dimensione del volume fisico LVM (in teoria dovrebbe ancora della dimensione prima dell'aggiunta alla partizione LVM)
 
-Device     Boot Start       End   Sectors  Size Id Type
-/dev/sdb1        2048 629145599 629143552  300G 8e Linux LVM
+	```bash
+	pvs
+	```
 
-Command (m for help): d
+9. Estendere il volume fisico LVM
+	
+	```bash
+	pvresize /dev/sdb1
+	```
 
-Selected partition 1
-Partition 1 has been deleted.
+10. Verifcare il volume fisico, il gruppo logico ed il volume logico LVM
 
-Command (m for help): n
-Partition type
-   p   primary (0 primary, 0 extended, 4 free)
-   e   extended (container for logical partitions)
-Select (default p): p
-Partition number (1-4, default 1):
-First sector (2048-838860799, default 2048):
-Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-838860799, default 838860799):
+	```bash
+	pvs
+	vgs
+	lvs
+	```
+	
+11. Estendere il volume logico LVM fino al 100% della nuova dimensione
 
-Created a new partition 1 of type 'Linux' and of size 400 GiB.
-Partition #1 contains a LVM2_member signature.
+	```bash
+	lvextend -r -l +100%FREE /dev/mapper/vg01-lvol0
+	```
 
-Do you want to remove the signature? [Y]es/[N]o: n
+12. estendere lv e il fs di 250GB
 
-Command (m for help): t
+	```bash
+	lvresize --resizefs --size +10GB /dev/rhel/root
+	lvresize --resizefs --extents +100%FREE /dev/mapper/vg01-lvol0
+	```
 
-Selected partition 1
-Hex code (type L to list all codes): 8e
-Changed type of partition 'Linux' to 'Linux LVM'.
+13. Verificare l'avvenuta espanzione del volume logico
+    
+	```
+	lvs
+	```
 
-Command (m for help): w
-The partition table has been altered.
-Syncing disks.
+14. Verificare che il FS sia stato esteso.
+    
+	```
+	df -h /data
+	```
 
-#Verifcare che lo spazio aggiuntivo sia visibile sulla partizione LVM
-root@rmftpp04:~# fdisk -lu /dev/sdb
-
-#Verificare l'attuale dimensione del volume fisico LVM (in teoria dovrebbe ancora della dimensione prima dell'aggiunta alla partizione LVM)
-pvs
-
-#Estendere il volume fisico LVM
-pvresize /dev/sdb1
-
-#Verifcare il volume fisico, il gruppo logico ed il volume logico LVM
-pvs
-vgs
-lvs
-
-#Estendere il volume logico LVM fino al 100% della nuova dimensione
-lvextend -r -l +100%FREE /dev/mapper/vg01-lvol0
-#estendere lv e il fs di 250GB
-lvresize --resizefs --size +10GB /dev/rhel/root
-lvresize --resizefs --extents +100%FREE /dev/mapper/vg01-lvol0
-
-#Verificare l'avvenuta espanzione del volume logico
-lvs
-
-#Verificare che il FS sia stato esteso.
-df -h /data
-
-#Per estendere un volume group esistente con un altro disco
+## Per estendere un volume group esistente con un altro disco
+    
 #rescan device per trovare il disco appena aggiunto
 echo "- - -" > /sys/class/scsi_host/host0/scan
 
